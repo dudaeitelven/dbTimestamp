@@ -82,6 +82,7 @@ void cadastrarOperacao () {
 	while (auxTransacao->prox != NULL) {
 		if (transacaoBusca == auxTransacao->identificador){
 			achouTransacao = 1;
+			// aqui vai ser inserido a operacao.
 		} else {
 			auxTransacao = auxTransacao->prox;
 		}
@@ -97,13 +98,13 @@ void cadastrarOperacao () {
 
 void menu() {
 
-	printf("     	     --- M E N U ---             	\n");
-	printf(" 1 - Cadastrar Transacao        	        \n");//Feito.
-	printf(" 2 - Cadastrar Operacao              	    \n");//
-	printf(" 3 -                                        \n");//
-	printf(" 4 -                      	                \n");//
-	printf(" 5 -                                        \n");//
-	printf(" 0 -   SAIR                           	    \n");//
+	printf("     	     --- M E N U ---           	\n");
+	printf(" 1 - Cadastrar Transacao                \n");//Feito.
+	printf(" 2 - Cadastrar Operacao                 \n");//Andamento
+	printf(" 3 -                                    \n");//
+	printf(" 4 -                      	        \n");//
+	printf(" 5 -                                    \n");//
+	printf(" 0 -   SAIR                             \n");//
 
 }
 
@@ -112,11 +113,11 @@ int identificadorTransacao = 0; // variavel global para controlar o numero de tr
 void carregaMenu(int Escolha) {
 
 	switch (Escolha) {
-		case 1: //Cadastrar Transações em ordem sequencial.
+		case 1: //Cadastrar TransaÃ§Ãµes em ordem sequencial.
 			cadastrarTransacao(identificadorTransacao++,1,1);
 			printf("%d", identificadorTransacao);
 			break;
-		case 2: //Cadastrar Operações de uma Transação.
+		case 2: //Cadastrar OperaÃ§Ãµes de uma TransaÃ§Ã£o.
 			cadastrarOperacao();
 
 			break;
