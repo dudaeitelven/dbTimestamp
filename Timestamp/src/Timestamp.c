@@ -15,5 +15,7 @@ int main(void) {
 
 	printf("Ola Mundo !");
 
-	return EXIT_SUCCESS;
+	printf("Ola Eclipse");
+	
+	return 0;
 }
