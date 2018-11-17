@@ -69,18 +69,37 @@ void cadastrarTransacao(int identificadorTransacao,int startTransacao,int commit
 	printf("Transacao Inserida com Sucesso !\n");
 }
 
+
 void cadastrarOperacao () {
+	int transacaoBusca = 0;
+	int achouTransacao = 0;
+
+	printf("Informe a Transacao: \n");
+	scanf("%d",&transacaoBusca);
+
+	nTransacao *auxTransacao = inicioTransacao;
+
+	while (auxTransacao->prox != NULL) {
+		if (transacaoBusca == auxTransacao->identificador){
+			achouTransacao = 1;
+		} else {
+			auxTransacao = auxTransacao->prox;
+		}
+	}
+
+	if (achouTransacao == 0) {
+		printf("Transacao nao localizada.\n");
+		return;
+	}
 
 
 }
 
-
-
 void menu() {
 
 	printf("     	     --- M E N U ---             	\n");
-	printf(" 1 - Cadastrar Transacao        	        \n");//
-	printf(" 2 -                 	                    \n");//
+	printf(" 1 - Cadastrar Transacao        	        \n");//Feito.
+	printf(" 2 - Cadastrar Operacao              	    \n");//
 	printf(" 3 -                                        \n");//
 	printf(" 4 -                      	                \n");//
 	printf(" 5 -                                        \n");//
@@ -91,25 +110,25 @@ void menu() {
 int identificadorTransacao = 0; // variavel global para controlar o numero de transacoes sequencial
 
 void carregaMenu(int Escolha) {
-		switch (Escolha) {
-	case 1: //
 
-		cadastrarTransacao(identificadorTransacao++,1,1);
-		printf("%d", identificadorTransacao);
+	switch (Escolha) {
+		case 1: //Cadastrar Transações em ordem sequencial.
+			cadastrarTransacao(identificadorTransacao++,1,1);
+			printf("%d", identificadorTransacao);
+			break;
+		case 2: //Cadastrar Operações de uma Transação.
+			cadastrarOperacao();
 
-		break;
-	case 2: //
+			break;
+		case 3: //
 
-		break;
-	case 3: //
+			break;
+		case 4: //
 
-		break;
-	case 4: //
+			break;
+		case 5: //
 
-		break;
-	case 5: //
-
-		break;
+			break;
 	}
 
 }
