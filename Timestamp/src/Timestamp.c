@@ -36,10 +36,66 @@ nTransacao *inicioTransacao;
 
 // historia inicial(HI) e historia final(HF) ?
 
-void carregaMenu(int Escolha) {
+nTransacao* FAlocaTransacao() {
+	nTransacao *Transacao = (nTransacao*) malloc(sizeof(nTransacao));
+	return Transacao;
+}
 
-	switch (Escolha) {
+void cadastrarTransacao(int identificadorTransacao,int startTransacao,int commitTransacao) {
+	nTransacao *pnovo;
+	nTransacao *aux = inicioTransacao;
+
+	pnovo = FAlocaTransacao();
+	if (!pnovo) {
+		printf("\n Nao foi possivel alocar \n");
+		return;
+	}
+
+	pnovo->identificador = identificadorTransacao;
+	pnovo->start = startTransacao;
+	pnovo->commit = commitTransacao;
+	pnovo->lista_operacao = NULL;
+	pnovo->prox = NULL;
+
+	if (inicioTransacao == NULL) {
+		inicioTransacao = pnovo;
+	} else {
+		while (aux->prox != NULL) {
+			aux = aux->prox;
+		}
+		aux->prox = pnovo;
+	}
+
+	printf("Transacao Inserida com Sucesso !\n");
+}
+
+void cadastrarOperacao () {
+
+
+}
+
+
+
+void menu() {
+
+	printf("     	     --- M E N U ---             	\n");
+	printf(" 1 - Cadastrar Transacao        	        \n");//
+	printf(" 2 -                 	                    \n");//
+	printf(" 3 -                                        \n");//
+	printf(" 4 -                      	                \n");//
+	printf(" 5 -                                        \n");//
+	printf(" 0 -   SAIR                           	    \n");//
+
+}
+
+int identificadorTransacao = 0; // variavel global para controlar o numero de transacoes sequencial
+
+void carregaMenu(int Escolha) {
+		switch (Escolha) {
 	case 1: //
+
+		cadastrarTransacao(identificadorTransacao++,1,1);
+		printf("%d", identificadorTransacao);
 
 		break;
 	case 2: //
@@ -58,46 +114,24 @@ void carregaMenu(int Escolha) {
 
 }
 
-void cadastrarTransacao () {
-
-}
-
-void cadastrarOperacao () {
-
-}
-
-void menu() {
-
-	printf("     	     --- M E N U ---             	\n");
-	printf(" 1 -                  	                    \n");//
-	printf(" 2 -                 	                    \n");//
-	printf(" 3 -                                        \n");//
-	printf(" 4 -                      	                \n");//
-	printf(" 5 -                                        \n");//
-	printf(" 0 -   SAIR                           	    \n");//
-
-}
-
-
 int main(void) {
 	setbuf(stdout, NULL);
-		int Escolha = 0;
+	int Escolha = 0;
 
+	do {
 		do {
-			do {
-				menu();
+			menu();
 
-				scanf("%d", &Escolha);
-				fflush(stdin);
+			scanf("%d", &Escolha);
+			fflush(stdin);
 
-				if ((Escolha < 0) || (Escolha > 5)) {
-					printf("Opcao incorreta, tente novamente ! \n");
-					system("pause");
-					system("cls");
-				}
-				carregaMenu(Escolha);
-			} while ((Escolha < 0) || (Escolha > 12));
-		} while (Escolha != 0);
+			if ((Escolha < 0) || (Escolha > 5)) {
+				printf("Opcao incorreta, tente novamente ! \n");
+				system("pause");
+			}
+			carregaMenu(Escolha);
+		} while ((Escolha < 0) || (Escolha > 12));
+	} while (Escolha != 0);
 
-		return 0;
+	return 0;
 }
