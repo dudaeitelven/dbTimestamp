@@ -22,13 +22,14 @@ typedef struct stDado {
 typedef struct stOperacao {
 	int operacao; // 1 - Leitura | 2 - Escrita
 	nDado *dado;
+	struct stOperacao *prox;
 } nOperacao;
 
 typedef struct stTransacao{
 	int identificador;
 	int start;
 	int commit;
-	nOperacao *IniciOperacao;
+	nOperacao *InicioOperacao;
 	struct stTransacao *prox;
 } nTransacao;
 
@@ -54,7 +55,7 @@ void cadastrarTransacao(int identificadorTransacao,int startTransacao,int commit
 	pnovo->identificador = identificadorTransacao;
 	pnovo->start = startTransacao;
 	pnovo->commit = commitTransacao;
-	pnovo->IniciOperacao = NULL;
+	pnovo->InicioOperacao = NULL;
 	pnovo->prox = NULL;
 
 	if (inicioTransacao == NULL) {
@@ -78,8 +79,7 @@ void cadastrarOperacao () {
 	int transacaoBusca = 0;
 	int achouTransacao = 0;
 
-	nOperaocao *pnovo;
-	nOperaocao *auxOperacao; // o que vai receber ?
+	nOperacao *pnovo;
 	nTransacao *auxTransacao = inicioTransacao;
 
 	pnovo = FAlocaOperacao();
@@ -87,19 +87,28 @@ void cadastrarOperacao () {
 		printf("\n Nao foi possivel alocar \n");
 		return;
 	}
-	
+
 	printf("Informe a Transacao: \n");
 	scanf("%d",&transacaoBusca);
 
-	// pnovo ?
+	printf("Informe a operacao que deseja adcionar\n 1 - Leitura ou 2 - Escrita\n");
+	scanf("%d",&pnovo->operacao);
+
+	printf("Informe o dado que deseja adicionar");
+	scanf("%s",&pnovo->dado->dado);
+
+	pnovo->dado->r_ts = 0;
+	pnovo->dado->w_ts = 0;
 
 	while (auxTransacao->prox != NULL) {
 		if (transacaoBusca == auxTransacao->identificador){
+
 			achouTransacao = 1;
-			if (inicioOperacao == NULL) {
-				inicioOperacao = pnovo;
+			if (auxTransacao->InicioOperacao == NULL) {
+				auxTransacao->InicioOperacao = pnovo;
 			} else {
-				while (auxOperacao->prox != NULL) {
+				nOperacao *auxOperacao = auxTransacao->InicioOperacao;
+				while(auxOperacao->prox != NULL) {
 					auxOperacao = auxOperacao->prox;
 				}
 				auxOperacao->prox = pnovo;
@@ -114,7 +123,6 @@ void cadastrarOperacao () {
 		printf("Transacao nao localizada.\n");
 		return;
 	}
-
 
 }
 
