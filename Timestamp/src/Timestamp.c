@@ -69,23 +69,45 @@ void cadastrarTransacao(int identificadorTransacao,int startTransacao,int commit
 	printf("Transacao Inserida com Sucesso !\n");
 }
 
+nOperacao* FAlocnOperacao() {
+	nOperacao *Operacao = (nOperacao*) malloc(sizeof(nOperacao));
+	return Operacao;
+}
 
 void cadastrarOperacao () {
 	int transacaoBusca = 0;
 	int achouTransacao = 0;
 
+	nOperaocao *pnovo;
+	nOperaocao *auxOperacao; // o que vai receber ?
+	nTransacao *auxTransacao = inicioTransacao;
+
+	pnovo = FAlocaOperacao();
+	if (!pnovo) {
+		printf("\n Nao foi possivel alocar \n");
+		return;
+	}
+	
 	printf("Informe a Transacao: \n");
 	scanf("%d",&transacaoBusca);
 
-	nTransacao *auxTransacao = inicioTransacao;
+	// pnovo ?
 
 	while (auxTransacao->prox != NULL) {
 		if (transacaoBusca == auxTransacao->identificador){
 			achouTransacao = 1;
-			// aqui vai ser inserido a operacao.
+			if (inicioOperacao == NULL) {
+				inicioOperacao = pnovo;
+			} else {
+				while (auxOperacao->prox != NULL) {
+					auxOperacao = auxOperacao->prox;
+				}
+				auxOperacao->prox = pnovo;
+			}
 		} else {
 			auxTransacao = auxTransacao->prox;
 		}
+		printf("Operacao inserida com sucesso !\n");
 	}
 
 	if (achouTransacao == 0) {
