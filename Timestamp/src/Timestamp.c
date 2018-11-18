@@ -28,7 +28,7 @@ typedef struct stTransacao{
 	int identificador;
 	int start;
 	int commit;
-	nOperacao *lista_operacao;
+	nOperacao *IniciOperacao;
 	struct stTransacao *prox;
 } nTransacao;
 
@@ -54,7 +54,7 @@ void cadastrarTransacao(int identificadorTransacao,int startTransacao,int commit
 	pnovo->identificador = identificadorTransacao;
 	pnovo->start = startTransacao;
 	pnovo->commit = commitTransacao;
-	pnovo->lista_operacao = NULL;
+	pnovo->IniciOperacao = NULL;
 	pnovo->prox = NULL;
 
 	if (inicioTransacao == NULL) {
