@@ -123,10 +123,10 @@ void menu() {
 	printf("     	     --- M E N U ---           	\n");
 	printf(" 1 - Cadastrar Transacao                \n");//Feito.
 	printf(" 2 - Cadastrar Operacao                 \n");//Andamento
-	printf(" 3 -                                    \n");//
-	printf(" 4 -                      	        \n");//
-	printf(" 5 -                                    \n");//
-	printf(" 0 -   SAIR                             \n");//
+	printf(" 3 - Gerar Historia Inicial             \n");//Nada feito.
+	printf(" 4 - Visualizar Transacoes     	        \n");//Nada feito.
+	printf(" 5 - Simular Timestamp                  \n");//Nada feito.
+	printf(" 0 - SAIR                               \n");
 
 }
 
@@ -137,19 +137,19 @@ void carregaMenu(int Escolha) {
 	switch (Escolha) {
 		case 1: //Cadastrar Transações em ordem sequencial.
 			cadastrarTransacao(identificadorTransacao++,1,1);
-			printf("%d", identificadorTransacao);
+			printf("Transacao %d adicionada ! \n", identificadorTransacao);
 			break;
 		case 2: //Cadastrar Operações de uma Transação.
 			cadastrarOperacao();
 
 			break;
-		case 3: //
+		case 3: //Gerar Historia Inicial
 
 			break;
-		case 4: //
+		case 4: //Visualizar Transacoes
 
 			break;
-		case 5: //
+		case 5: //Simular Timestamp
 
 			break;
 	}
