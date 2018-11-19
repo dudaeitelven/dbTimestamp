@@ -14,7 +14,7 @@
 #include <locale.h>
 
 typedef struct stDado {
-	char dado[1];
+	char dado[5];
 	int r_ts;
 	int w_ts;
 } nDado;
@@ -70,12 +70,13 @@ void cadastrarTransacao(int identificadorTransacao,int startTransacao,int commit
 	printf("Transacao Inserida com Sucesso !\n");
 }
 
-nOperacao* FAlocnOperacao() {
+nOperacao* FAlocaOperacao() {
 	nOperacao *Operacao = (nOperacao*) malloc(sizeof(nOperacao));
 	return Operacao;
 }
 
 void cadastrarOperacao () {
+
 	int transacaoBusca = 0;
 	int achouTransacao = 0;
 
@@ -83,32 +84,41 @@ void cadastrarOperacao () {
 	nTransacao *auxTransacao = inicioTransacao;
 
 	pnovo = FAlocaOperacao();
+
 	if (!pnovo) {
 		printf("\n Nao foi possivel alocar \n");
 		return;
 	}
 
+	if (auxTransacao == NULL) {
+		printf("Nenhuma Transacao cadastrada ! \n");
+		return;
+	}
+
 	printf("Informe a Transacao: \n");
 	scanf("%d",&transacaoBusca);
+	fflush(stdin);
 
-	printf("Informe a operacao que deseja adcionar\n 1 - Leitura ou 2 - Escrita\n");
+	printf("Informe a operacao que deseja adcionar:\n 1 - Leitura ou 2 - Escrita\n");
 	scanf("%d",&pnovo->operacao);
+	fflush(stdin);
 
-	printf("Informe o dado que deseja adicionar");
-	scanf("%s",&pnovo->dado->dado);
+	//printf("Informe o dado que deseja adicionar:");
+	//gets(dado);
+	//strcpy(pnovo->dado->dado,"x");
+	//pnovo->dado->r_ts = 0;
+	//pnovo->dado->w_ts = 0;
+	pnovo->prox = NULL;
 
-	pnovo->dado->r_ts = 0;
-	pnovo->dado->w_ts = 0;
-
-	while (auxTransacao->prox != NULL) {
+	while (auxTransacao != NULL) {
 		if (transacaoBusca == auxTransacao->identificador){
-
-			achouTransacao = 1;
 			if (auxTransacao->InicioOperacao == NULL) {
 				auxTransacao->InicioOperacao = pnovo;
 			} else {
+
 				nOperacao *auxOperacao = auxTransacao->InicioOperacao;
-				while(auxOperacao->prox != NULL) {
+
+				while(auxOperacao != NULL) {
 					auxOperacao = auxOperacao->prox;
 				}
 				auxOperacao->prox = pnovo;
@@ -117,6 +127,9 @@ void cadastrarOperacao () {
 			auxTransacao = auxTransacao->prox;
 		}
 		printf("Operacao inserida com sucesso !\n");
+		achouTransacao = 1;
+		return;
+
 	}
 
 	if (achouTransacao == 0) {
@@ -124,6 +137,40 @@ void cadastrarOperacao () {
 		return;
 	}
 
+}
+
+void mostrarTransacoes () {
+	nTransacao *aux = inicioTransacao;
+
+	if (aux == NULL) {
+			printf("Lista Vazia !\n");
+			system("pause");
+			return;
+		}
+
+	while (aux != NULL){
+		printf("Identificador: %d\n",aux->identificador);
+		printf("Start: %d\n",aux->start);
+		printf("Commit: %d\n",aux->commit);
+		printf("Operacoes \n");
+
+		nOperacao *auxOperacao = aux->InicioOperacao;
+
+		while(auxOperacao != NULL){
+
+			printf("   Operacao: %d \n",auxOperacao->operacao);
+			printf("   Dado: %s \n",auxOperacao->dado->dado);
+			printf("   RTS: %d \n",auxOperacao->dado->r_ts);
+			printf("   WTS: %d \n\n",auxOperacao->dado->w_ts);
+
+			auxOperacao = auxOperacao->prox;
+
+		}
+
+		printf("\n\n");
+
+		aux = aux->prox;
+	}
 }
 
 void menu() {
@@ -138,24 +185,23 @@ void menu() {
 
 }
 
-int identificadorTransacao = 0; // variavel global para controlar o numero de transacoes sequencial
+int identificadorTransacao = 0;
 
 void carregaMenu(int Escolha) {
 
-	switch (Escolha) {
-		case 1: //Cadastrar Transações em ordem sequencial.
-			cadastrarTransacao(identificadorTransacao++,1,1);
-			printf("Transacao %d adicionada ! \n", identificadorTransacao);
-			break;
-		case 2: //Cadastrar Operações de uma Transação.
-			cadastrarOperacao();
 
+	switch (Escolha) {
+		case 1: //Cadastrar Transacoes em ordem sequencial.
+			cadastrarTransacao(++identificadorTransacao,1,1);
+			break;
+		case 2: //Cadastrar Operacoes de uma Transacao.
+			cadastrarOperacao();
 			break;
 		case 3: //Gerar Historia Inicial
 
 			break;
 		case 4: //Visualizar Transacoes
-
+			mostrarTransacoes();
 			break;
 		case 5: //Simular Timestamp
 
