@@ -151,11 +151,6 @@ void cadastrarOperacao (int transacaoBusca, int dados) {
 
 }
 
-nHistoria* FAlocaHistoria() {
-	nHistoria *Historia = (nHistoria*) malloc(sizeof(nHistoria));
-	return Historia;
-}
-
 void mostrarTransacoes () {
 	nTransacao *aux = inicioTransacao;
 
@@ -250,7 +245,40 @@ void insereDados(int cont) {
 }
 
 
+nHistoria* FAlocaHistoria() {
+	nHistoria *Historia = (nHistoria*) malloc(sizeof(nHistoria));
+	return Historia;
+}
 
+
+void gerarHistoriaInicial() {
+	nDado *auxDado = inicioDado;
+	nTransacao *auxTransacao = inicioTransacao;
+	nHistoria *auxHistoria = inicioHistoria;
+	nHistoria *pnovo;
+
+	pnovo->tsTranscao = 0;
+	pnovo->operacao = 0;
+	pnovo->dado = 0;
+	pnovo->prox = NULL;
+
+
+	if (auxHistoria == NULL) {
+		auxHistoria = pnovo;
+	} else {
+		while (auxHistoria->prox != NULL){
+			auxHistoria = auxHistoria->prox;
+		}
+		auxHistoria->prox = pnovo;
+	}
+
+}
+
+void executa (){
+
+
+
+}
 
 
 
