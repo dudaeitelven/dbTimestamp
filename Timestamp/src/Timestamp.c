@@ -384,7 +384,7 @@ void gerarHistoriaInicial() {
 		auxTransacao = auxTransacao->prox;
 	}
 
-	printf(" HI - HISTORIA INICIL \n\n");
+	printf(" HI - HISTORIA INICIAL \n\n");
 	mostraHistoria(inicioHistoria);
 
 }
