@@ -1,8 +1,8 @@
  /*
  ============================================================================
  Name        : timestamp.c
- Author      : Eduardo Eitelven
- Version     : 1.0
+ Author      : Eduardo Eitelven - Lucas Klein
+ Version     : 1.3
  Copyright   : Your copyright notice
  Description : Timestamp
  ============================================================================
@@ -46,7 +46,7 @@ typedef struct stHistoria{
 nDado *inicioDado;
 nTransacao *inicioTransacao;
 nHistoria *inicioHistoria;
-nHistoria *inicioHistoriaAleatoria;
+nHistoria *inicioHistoriaFinal;
 
 nTransacao* FAlocaTransacao() {
 	nTransacao *Transacao = (nTransacao*) malloc(sizeof(nTransacao));
@@ -155,12 +155,39 @@ void cadastrarOperacao (int transacaoBusca, int dados) {
 
 void mostrarTransacoes () {
 	nTransacao *aux = inicioTransacao;
+	nDado * auxDado = inicioDado;
 
 	if (aux == NULL) {
 			printf("Lista Vazia !\n");
 			system("pause");
 			return;
 		}
+
+	while (auxDado != NULL) {
+		switch(auxDado->dado){
+			case 1:
+				printf("Dado: X\n");
+				break;
+			case 2:
+				printf("Dado: Y\n");
+				break;
+			case 3:
+				printf("Dado: Z\n");
+				break;
+			case 4:
+				printf("Dado: A\n");
+				break;
+			case 5:
+				printf("Dado: B\n");
+				break;
+		}
+		printf("   R_TS: %d\n",auxDado->r_ts);
+		printf("   W_TS: %d\n",auxDado->r_ts);
+
+		auxDado = auxDado->prox;
+	}
+
+	printf("\n\n");
 
 	while (aux != NULL){
 		printf("Transacao: %d\n",aux->identificador);
@@ -252,15 +279,67 @@ nHistoria* FAlocaHistoria() {
 	return Historia;
 }
 
-void mostraHistoriaInicial(){
+void mostraHistoria(nHistoria *inicio){
+	nDado *auxDado = inicioDado;
+	nHistoria *auxHistoria = inicio;
 
-	nHistoria *auxHistoria = inicioHistoria;
+	while (auxDado != NULL) {
+		switch(auxDado->dado){
+			case 1:
+				printf("Dado: X\n");
+				break;
+			case 2:
+				printf("Dado: Y\n");
+				break;
+			case 3:
+				printf("Dado: Z\n");
+				break;
+			case 4:
+				printf("Dado: A\n");
+				break;
+			case 5:
+				printf("Dado: B\n");
+				break;
+		}
+		printf("   R_TS: %d\n",auxDado->r_ts);
+		printf("   W_TS: %d\n",auxDado->w_ts);
+
+		auxDado = auxDado->prox;
+	}
+
+	printf("\n\n");
 
 	while (auxHistoria != NULL){
-        printf("Ordem da Lista %d\n", auxHistoria->contador);
-		printf("Transacao: %d \n", auxHistoria->tsTranscao);
-		printf("Operacao: %d \n", auxHistoria->operacao);
-		printf("Dado: %d\n\n", auxHistoria->dado);
+        printf("Ordem da Lista: %d\n", auxHistoria->contador);
+
+		switch(auxHistoria->operacao){
+			case 1:
+				printf("   Operacao: Leitura \n");
+				break;
+			case 2:
+				printf("   Operacao: Escrita \n");
+				break;
+		}
+
+		switch(auxHistoria->dado){
+			case 1:
+				printf("   Dado: X\n");
+				break;
+			case 2:
+				printf("   Dado: Y\n");
+				break;
+			case 3:
+				printf("   Dado: Z\n");
+				break;
+			case 4:
+				printf("   Dado: A\n");
+				break;
+			case 5:
+				printf("   Dado: B\n");
+				break;
+		}
+
+		printf("   Transacao: %d \n\n", auxHistoria->tsTranscao);
 
 		auxHistoria = auxHistoria->prox;
 	}
@@ -304,18 +383,133 @@ void gerarHistoriaInicial() {
 
 		auxTransacao = auxTransacao->prox;
 	}
-	mostraHistoriaInicial();
 
+	printf(" HI - HISTORIA INICIL \n\n");
+	mostraHistoria(inicioHistoria);
+
+}
+
+void insereHistoriaFinal(nHistoria *atualizaHistoria) {
+	nHistoria *auxHistoriaFinal = inicioHistoriaFinal;
+	nHistoria *pnovo;
+	int cont = 1;
+
+	pnovo = FAlocaHistoria();
+
+	if (!pnovo) {
+		printf("\n Nao foi possivel alocar \n");
+		return;
+	}
+
+	pnovo->tsTranscao = atualizaHistoria->tsTranscao;
+	pnovo->operacao = atualizaHistoria->operacao;
+	pnovo->dado = atualizaHistoria->dado;
+	pnovo->contador = cont++;
+	pnovo->prox = NULL;
+
+	if (auxHistoriaFinal == NULL) {
+		auxHistoriaFinal = pnovo;
+		inicioHistoriaFinal = auxHistoriaFinal;
+	} else {
+		while (auxHistoriaFinal->prox != NULL){
+			auxHistoriaFinal = auxHistoriaFinal->prox;
+		}
+		auxHistoriaFinal->prox = pnovo;
+	}
+
+}
+
+void atualizaWts(nHistoria *historia) {
+	nDado *auxDado = inicioDado;
+
+	 while (auxDado != NULL){
+		if (auxDado->dado == historia->dado) {
+			auxDado->w_ts = historia->tsTranscao;
+			break;
+		}
+		auxDado = auxDado->prox;
+	}
+
+}
+
+void atualizaRts(nHistoria *historia) {
+	nDado *auxDado = inicioDado;
+
+	 while (auxDado != NULL){
+		if (auxDado->dado == historia->dado) {
+			auxDado->r_ts = historia->tsTranscao;
+			break;
+		}
+		auxDado = auxDado->prox;
+	}
+
+}
+
+void simularTimestamp() {
+	nHistoria *auxHistoriaInicial = inicioHistoria;
+
+
+	while (auxHistoriaInicial != NULL){
+		nDado *auxDado = inicioDado;
+		nDado *dado;
+
+		while (auxDado != NULL){
+			if (auxHistoriaInicial->dado == auxDado->dado) {
+				dado = auxDado;
+				break;
+			}
+			auxDado = auxDado->prox;
+		}
+
+
+		if (auxHistoriaInicial->operacao == 1) { // Para Leitura
+			if (auxHistoriaInicial->tsTranscao < dado->w_ts){
+				// operacao de leitura rejeitada.
+				// T(i) deve ser abortada.
+				return;
+			}
+
+			if (auxHistoriaInicial->tsTranscao >= dado->w_ts){
+				// operacao de leitura executada.
+                insereHistoriaFinal(auxHistoriaInicial);
+				// Atualizar r_ts do dado do tsTransacao.
+                atualizaRts(auxHistoriaInicial);
+			}
+
+		}
+
+		if (auxHistoriaInicial->operacao == 2){ // Para Escrita
+			if (auxHistoriaInicial->tsTranscao < dado->r_ts){
+				// operacao de escrita rejeitada.
+				// T(i) deve ser abortada.
+				return;
+			}
+
+			if (auxHistoriaInicial->tsTranscao < dado->w_ts){
+				// operacao de escrita rejeitada.
+				// T(i) deve ser abortada.
+				return;
+			} else {
+				// operacao de escrita executada.
+			    insereHistoriaFinal(auxHistoriaInicial);
+				// Atualizar w_ts do dado do tsTransacao.
+			    atualizaWts(auxHistoriaInicial);
+			}
+
+		}
+
+		auxHistoriaInicial = auxHistoriaInicial->prox;
+	}
 }
 
 void menu() {
 
 	printf("     	     --- M E N U ---           	\n");
 	printf(" 1 - Cadastrar Transacao                \n");//Feito.
-	printf(" 2 - Cadastrar Operacao                 \n");//Andamento
-	printf(" 3 - Gerar Historia Inicial             \n");//Nada feito.
-	printf(" 4 - Visualizar Transacoes     	        \n");//Nada feito.
-	printf(" 5 - Simular Timestamp                  \n");//Nada feito.
+	printf(" 2 - Cadastrar Operacao                 \n");//Feito
+	printf(" 3 - Gerar Historia Inicial             \n");//Em andamento.
+	printf(" 4 - Visualizar Transacoes     	        \n");//Feito.
+	printf(" 5 - Simular Timestamp                  \n");//Em andamento.
 	printf(" 0 - SAIR                               \n");
 
 }
@@ -352,6 +546,9 @@ void carregaMenu(int Escolha) {
 			mostrarTransacoes();
 			break;
 		case 5: //Simular Timestamp
+		    simularTimestamp();
+		    printf(" HF - HISTORIA FINAL \n\n");
+		    mostraHistoria(inicioHistoriaFinal);
 			break;
 	}
 
