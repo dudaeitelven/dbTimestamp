@@ -38,6 +38,7 @@ typedef struct stHistoria{
 	int tsTranscao;
 	int operacao;
 	int dado;
+	int contador;
 	struct stHistoria *prox;
 } nHistoria;
 
@@ -45,6 +46,7 @@ typedef struct stHistoria{
 nDado *inicioDado;
 nTransacao *inicioTransacao;
 nHistoria *inicioHistoria;
+nHistoria *inicioHistoriaAleatoria;
 
 nTransacao* FAlocaTransacao() {
 	nTransacao *Transacao = (nTransacao*) malloc(sizeof(nTransacao));
@@ -250,40 +252,61 @@ nHistoria* FAlocaHistoria() {
 	return Historia;
 }
 
+void mostraHistoriaInicial(){
+
+	nHistoria *auxHistoria = inicioHistoria;
+
+	while (auxHistoria != NULL){
+        printf("Ordem da Lista %d\n", auxHistoria->contador);
+		printf("Transacao: %d \n", auxHistoria->tsTranscao);
+		printf("Operacao: %d \n", auxHistoria->operacao);
+		printf("Dado: %d\n\n", auxHistoria->dado);
+
+		auxHistoria = auxHistoria->prox;
+	}
+}
 
 void gerarHistoriaInicial() {
-	nDado *auxDado = inicioDado;
+    int cont = 1;
 	nTransacao *auxTransacao = inicioTransacao;
 	nHistoria *auxHistoria = inicioHistoria;
-	nHistoria *pnovo;
 
-	pnovo->tsTranscao = 0;
-	pnovo->operacao = 0;
-	pnovo->dado = 0;
-	pnovo->prox = NULL;
+	while (auxTransacao != NULL){
+		nOperacao *auxOperacao = auxTransacao->InicioOperacao;
 
+		while(auxOperacao != NULL){
 
-	if (auxHistoria == NULL) {
-		auxHistoria = pnovo;
-	} else {
-		while (auxHistoria->prox != NULL){
-			auxHistoria = auxHistoria->prox;
+			nHistoria *pnovo;
+            pnovo = FAlocaHistoria();
+			if (!pnovo) {
+				printf("\n Nao foi possivel alocar \n");
+				return;
+			}
+
+			pnovo->tsTranscao = auxTransacao->identificador;
+			pnovo->operacao = auxOperacao->operacao;
+			pnovo->dado = auxOperacao->dado;
+			pnovo->contador = cont++;
+			pnovo->prox = NULL;
+
+			if (inicioHistoria == NULL) {
+					inicioHistoria = pnovo;
+					auxHistoria = inicioHistoria;
+			} else {
+				while (auxHistoria->prox != NULL){
+					auxHistoria = auxHistoria->prox;
+				}
+				auxHistoria->prox = pnovo;
+			}
+
+			auxOperacao = auxOperacao->prox;
 		}
-		auxHistoria->prox = pnovo;
+
+		auxTransacao = auxTransacao->prox;
 	}
+	mostraHistoriaInicial();
 
 }
-
-void executa (){
-
-
-
-}
-
-
-
-
-
 
 void menu() {
 
@@ -323,13 +346,12 @@ void carregaMenu(int Escolha) {
 			cadastrarOperacao(transacaoBusca,escolheDado);
 			break;
 		case 3: //Gerar Historia Inicial
-
+			gerarHistoriaInicial();
 			break;
 		case 4: //Visualizar Transacoes
 			mostrarTransacoes();
 			break;
 		case 5: //Simular Timestamp
-
 			break;
 	}
 
@@ -343,7 +365,6 @@ int main(void) {
 	while (cont <=5){
 		insereDados(cont++);
 	}
-
 
 	do {
 		do {
